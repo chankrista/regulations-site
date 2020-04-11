@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.core.cache import caches
 import requests
-
+import urllib.parse
 
 _cache_key = '-'.join
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ def _fetch(suffix, params=None):
         logger.error("API_BASE not configured. We won't have data")
         return None
 
-    response = requests.get(settings.API_BASE + suffix, params=params)
+    response = requests.get(urllib.parse.urljoin(settings.API_BASE, suffix) , params=params)
     if response.status_code == requests.codes.ok:
         return response.json()
     elif response.status_code == 404:
